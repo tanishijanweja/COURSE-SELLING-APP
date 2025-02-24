@@ -1,5 +1,5 @@
 {
-  "name": "cohort-3",
+  "name": "auhentication",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -9,10 +9,8 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "description": "",
   "dependencies": {
-    "chalk": "^5.4.1",
-    "commander": "^13.1.0",
     "express": "^4.21.2"
-  },
-  "description": ""
+  }
 }
