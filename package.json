@@ -1,6 +1,12 @@
 {
+<<<<<<< HEAD
   "name": "cohort-3",
   "version": "1.0.0",
+=======
+  "name": "course-selling-app",
+  "version": "1.0.0",
+  "description": "- Initialize a new Node.js project\r - Add Express, jsonwebtoken to it as a dependency\r - Create index.js\r - Add route skeleton for user login, signup, purchase a course, see course\r - Add routes for admin login, admin signup, create a course, delete a course, add course content.\r - Add middlewares for user and admin auth\r - Add a database (mongodb), use dotenv to store the database connection string\r - Define the schema for User, Admin, Course, Purchase\r - Complete the routes for user login, signup, purchase a course, see course (Extra points Use express routing to\r better structure your routes)\r - Create the frontend",
+>>>>>>> 6439d77 (project1 commit)
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,10 +16,17 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+<<<<<<< HEAD
     "chalk": "^5.4.1",
     "commander": "^13.1.0",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2"
   },
   "description": ""
+=======
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1"
+  }
+>>>>>>> 6439d77 (project1 commit)
 }
