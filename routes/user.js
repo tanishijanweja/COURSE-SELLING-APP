@@ -1,11 +1,11 @@
 const bcrypt = require("bcrypt");
 const { Router } = require("express");
-const { userModel } = require("../db");
+const { userModel, purchaseModel, courseModel } = require("../db");
 const { z, string } = require("zod");
 const jwt = require("jsonwebtoken");
 const { JWT_USER_PASSWORD } = require("../config");
 const userRouter = Router();
-
+const { userMiddleware } = require("../middleware/user");
 
 userRouter.post("/signup", async function (req, res) {
   const requiredBody = z.object({
@@ -27,7 +27,7 @@ userRouter.post("/signup", async function (req, res) {
   const { email, password, firstName, lastName } = parsedData.data;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 5);
+    const hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
 
     await userModel.create({
@@ -77,9 +77,23 @@ userRouter.post("/signin", async function (req, res) {
   }
 });
 
-userRouter.get("/purchases", function (req, res) {
+userRouter.get("/purchases", userMiddleware, async function (req, res) {
+  const userId = req.userId;
+
+  const purchases = await purchaseModel.find({
+    userId,
+  });
+  let purchasedCourseId = [];
+
+  for (let i = 0; i < purchases.length; i++) {
+    purchasedCourseId.push(purchases[i].courseId);
+  }
+  const courseData = await courseModel.find({
+    _id: { $in: purchasedCourseId },
+  });
+
   res.json({
-    message: "",
+    purchases,
   });
 });
 

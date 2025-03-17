@@ -1,16 +1,16 @@
 const bcrypt = require("bcrypt");
-const { Router } = require("express");
-const { adminModel, courseModel } = require("../db");
-const { z, string } = require("zod");
 const jwt = require("jsonwebtoken");
-const { JWT_ADMIN_PASSWORD } = require("../config");
+const { Router } = require("express");
 const adminRouter = Router();
+const { adminModel, courseModel } = require("../db");
+const { z } = require("zod");
+const { JWT_ADMIN_PASSWORD } = require("../config");
 const { adminMiddleware } = require("../middleware/admin");
 
 adminRouter.post("/signup", async function (req, res) {
   const requiredBody = z.object({
     email: z.string().min(3).max(100).email(),
-    password: z.string().min(3).max(30),
+    password: z.string().min(6).max(30),
     firstName: z.string().min(2).max(100),
     lastName: z.string().min(2).max(100),
   });
@@ -28,14 +28,14 @@ adminRouter.post("/signup", async function (req, res) {
   const { email, password, firstName, lastName } = parsedData.data;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 5);
+    const hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
 
     await adminModel.create({
-      email: email,
+      email,
       password: hashedPassword,
-      firstName: firstName,
-      lastName: lastName,
+      firstName,
+      lastName,
     });
     res.json({
       message: "You are signed up",
