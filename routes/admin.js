@@ -1,12 +1,11 @@
-const express = require("express");
 const bcrypt = require("bcrypt");
 const { Router } = require("express");
-const { adminModel } = require("../db");
+const { adminModel, courseModel } = require("../db");
 const { z, string } = require("zod");
 const jwt = require("jsonwebtoken");
-const JWT_ADMIN_PASSWORD = "qweqwe";
-
-const adminRouter = express.Router();
+const { JWT_ADMIN_PASSWORD } = require("../config");
+const adminRouter = Router();
+const { adminMiddleware } = require("../middleware/admin");
 
 adminRouter.post("/signup", async function (req, res) {
   const requiredBody = z.object({
@@ -78,19 +77,55 @@ adminRouter.post("/signin", async function (req, res) {
     });
   }
 });
-adminRouter.post("/course", function (req, res) {
+adminRouter.post("/course", adminMiddleware, async function (req, res) {
+  const adminId = req.adminId;
+
+  const { title, description, imageUrl, price } = req.body;
+
+  const course = await courseModel.create({
+    title: title,
+    description: description,
+    imageUrl: imageUrl,
+    price: price,
+    adminId: adminId,
+  });
+
   res.json({
-    message: "",
+    message: "Course created",
+    courseId: course._id,
   });
 });
-adminRouter.put("/course", function (req, res) {
+adminRouter.put("/course", adminMiddleware, async function (req, res) {
+  const adminId = req.adminId;
+
+  const { title, description, imageUrl, price, courseId } = req.body;
+
+  const course = await courseModel.updateOne(
+    {
+      _id: courseId,
+      adminId: adminId,
+    },
+    {
+      title: title,
+      description: description,
+      imageUrl: imageUrl,
+      price: price,
+    }
+  );
   res.json({
-    message: "",
+    message: "Course updated",
+    courseId: course._id,
   });
 });
-adminRouter.get("/coursebulk", function (req, res) {
+adminRouter.get("/course/bulk", adminMiddleware, async function (req, res) {
+  const adminId = req.adminId;
+
+  const courses = await courseModel.find({
+    adminId: adminId,
+  });
   res.json({
-    message: "",
+    message: "Course updates",
+    courses,
   });
 });
 
